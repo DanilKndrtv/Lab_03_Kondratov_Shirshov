@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 API_URL = "https://api-inference.huggingface.co/models/distilbert-base-uncased"
-headers = {"Authorization": "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"}
+headers = {"Authorization": "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"}
 
 def query(payload):
     response = requests.post(API_URL, headers=headers, json=payload)
@@ -15,3 +15,4 @@ if st.button("Отправить") and text:
     output = query({"inputs": text})
     st.write(output)
 # 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
+
