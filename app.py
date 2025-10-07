@@ -1,15 +1,17 @@
 import streamlit as st
-from transformers import pipeline
+import requests
 
-st.title("🤖 Hugging Face + Streamlit Demo")
+API_URL = "https://api-inference.huggingface.co/models/distilbert-base-uncased"
+headers = {"Authorization": "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"}
 
-# Загружаем модель
-model = pipeline("sentiment-analysis")
+def query(payload):
+    response = requests.post(API_URL, headers=headers, json=payload)
+    return response.json()
 
-# Интерфейс
-user_input = st.text_input("Введите текст для анализа:")
+st.title("🤗 Hugging Face API + Streamlit")
 
-if user_input:
-    result = model(user_input)[0]
-    st.write(f"**Текст:** {user_input}")
-    st.write(f"**Результат:** {result['label']} ({result['score']:.2f})")
+text = st.text_area("Введите текст:")
+if st.button("Отправить") and text:
+    output = query({"inputs": text})
+    st.write(output)
+# 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
