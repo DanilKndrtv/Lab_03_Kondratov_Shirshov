@@ -7,7 +7,7 @@ load_dotenv()
 HF_TOKEN = os.getenv("HF_TOKEN")
 st.write("HF_TOKEN:", HF_TOKEN)  # проверяем, что токен подхватился
 
-API_URL = "https://api-inference.huggingface.co/models/distilbert-base-uncased"
+API_URL = "https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english"
 headers = {"Authorization": f"Bearer {HF_TOKEN}"}
 
 def query(payload):
@@ -24,4 +24,5 @@ text = st.text_area("Введите текст:")
 if st.button("Отправить") and text:
     output = query({"inputs": text})
     st.write(output)
+
 
