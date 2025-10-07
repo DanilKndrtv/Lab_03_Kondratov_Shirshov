@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 API_URL = "https://api-inference.huggingface.co/models/distilbert-base-uncased"
-headers = {"Authorization": "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"}
+headers = {"Authorization": "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"}
 
 def query(payload):
     response = requests.post(API_URL, headers=headers, json=payload)
