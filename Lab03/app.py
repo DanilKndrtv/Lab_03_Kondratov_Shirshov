@@ -42,77 +42,52 @@ uploaded_file = st.file_uploader("Выберите CSV файл с данным�
 if uploaded_file is not None:
     df_csv = pd.read_csv(uploaded_file)
     st.subheader("📊 Данные из вашего CSV файла")
-    st.dataframe(df_csv, use_container_width=True)
+    
+    # Выбор колонок для отображения
+    selected_columns = st.multiselect("Выберите колонки для отображения", df_csv.columns.tolist(), default=df_csv.columns.tolist())
+    st.dataframe(df_csv[selected_columns], use_container_width=True)
+
     st.markdown("---")
 
-    st.markdown("""
-    Для просмотра данных только по спасенным или погибшим, выберите соответствующий пункт из списка:
-    """)
-
+    # Фильтр по выжившим
     survived_option = st.selectbox(
-        "**Значение поля Survived:**",
-        ["Любое", "Спасенные (1)", "Погибшие (0)"],
-        index=0
+        "Выберите категорию пассажиров",
+        ["Все", "Спасенные (1)", "Погибшие (0)"]
     )
-
-    st.markdown("---")
-
-    # Данные по среднему возрасту
-    data = {
-        'Класс обслуживания': ['1 класс', '2 класс', '3 класс'],
-        'Средний возраст': [38.2, 29.9, 25.1]
-    }
-    df = pd.DataFrame(data)
 
     if survived_option == "Спасенные (1)":
-        df.insert(0, 'Survived', [1, 1, 1])
-        st.subheader("📊 Данные по спасенным пассажирам")
+        df_filtered = df_csv[df_csv['Survived'] == 1]
     elif survived_option == "Погибшие (0)":
-        df.insert(0, 'Survived', [0, 0, 0])
-        st.subheader("📊 Данные по погибшим пассажирам")
+        df_filtered = df_csv[df_csv['Survived'] == 0]
     else:
-        df.insert(0, 'Survived', [0, 1, 2])
-        st.subheader("📊 Общие данные по пассажирам")
+        df_filtered = df_csv
 
-    st.dataframe(
-        df,
-        use_container_width=True,
-        hide_index=True
-    )
-
-    st.markdown("""
-    <style>
-        .stDataFrame {
-            font-size: 16px;
-        }
-        div[data-testid="stDataFrame"] table {
-            width: 100%;
-        }
-    </style>
-    """, unsafe_allow_html=True)
+    st.subheader("📊 Отфильтрованные данные")
+    st.dataframe(df_filtered[selected_columns], use_container_width=True)
 
     st.markdown("---")
-    st.markdown("""
-    **Примечание:**
-    - **Survived = 0** - пассажир погиб
-    - **Survived = 1** - пассажир спасся
-    - Данные показывают средний возраст пассажиров по классам обслуживания
-    """)
 
-    with st.expander("📈 Дополнительная статистика"):
-        col1, col2, col3 = st.columns(3)
+    # Графики
+    st.subheader("📈 Графическая статистика")
 
-        with col1:
-            st.metric("1 класс", "38.2 лет", "Старше")
+    # Выбор категории для графика
+    chart_option = st.selectbox("Выберите, что визуализировать", ["Возраст по классам", "Количество пассажиров по полу", "Выживаемость по классу"])
 
-        with col2:
-            st.metric("2 класс", "29.9 лет", "Средний")
+    if chart_option == "Возраст по классам":
+        age_data = df_filtered.groupby('Pclass')['Age'].mean().reset_index()
+        st.bar_chart(data=age_data, x='Pclass', y='Age')
 
-        with col3:
-            st.metric("3 класс", "25.1 лет", "Младше")
+    elif chart_option == "Количество пассажиров по полу":
+        sex_data = df_filtered['Sex'].value_counts()
+        st.bar_chart(sex_data)
+
+    elif chart_option == "Выживаемость по классу":
+        survival_data = df_filtered.groupby('Pclass')['Survived'].mean().reset_index()
+        st.bar_chart(survival_data, x='Pclass', y='Survived')
 
 else:
     st.info("Загрузите CSV файл для отображения данных.")
+
 
 
 
