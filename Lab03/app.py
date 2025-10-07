@@ -41,7 +41,7 @@ st.set_page_config(
 st.title("🚢 Данные пассажиров Титаника")
 
 
-csv_path = "Users\Данил\Downloads\titanic_train.csv"
+csv_path = "C:/Users/Данил/Downloads/titanic_train.csv"
 
 if os.path.exists(csv_path):
     df_csv = pd.read_csv(csv_path)
