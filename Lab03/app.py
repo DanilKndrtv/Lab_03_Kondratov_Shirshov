@@ -41,7 +41,7 @@ st.set_page_config(
 st.title("🚢 Данные пассажиров Титаника")
 
 # === ДОБАВЛЕННАЯ СТРОКА ДЛЯ УКАЗАНИЯ ПУТИ К CSV ===
-csv_path = ""\Users\Данил\Downloads\titanic_train.csv"" 
+csv_path = "\Users\Данил\Downloads\titanic_train.csv"
 
 if os.path.exists(csv_path):
     df_csv = pd.read_csv(csv_path)
@@ -124,6 +124,7 @@ with st.expander("📈 Дополнительная статистика"):
     
     with col3:
         st.metric("3 класс", "25.1 лет", "Младше") что этот код еще вычисляет
+
 
 
 
